@@ -6,8 +6,10 @@
 // Получение значений из бд
 
 
-$supplies = mysqli_query(db\getConnection(), "SELECT * FROM fuel_supplies WHERE idsm = '$idsm' LIMIT 1");
 
+$supplies = mysqli_query(db\getConnection(), "SELECT * FROM fuel_supplies WHERE idsim = '$idsim' LIMIT 1");
+
+var_dump($supplies);
 
 
 // Установка новых значений 
