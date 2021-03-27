@@ -1,8 +1,5 @@
-<?php
- require_once $_SERVER['DOCUMENT_ROOT'] . '/template/header.php';
-?>
-<main>
-<div class="container">
+<?php require_once $_SERVER['DOCUMENT_ROOT'] . '/template/header.php';?>
+
 	<div class="mt-4"><a class="text-grey " href="/route/refills_list/"><i class="fa fa-chevron-left" aria-hidden="true"></i> Список заправок</a></div>
 	<div class="row mt-2 flex">
 			<div class="col-md-9"><h1 class="active main-title">АЗС № <?= $_GET['id']?><br></h1></div>
@@ -40,13 +37,10 @@
             <div class="card-body row">
             	<div class="col-md-9">
             		<h6>Охранник</h6>
-            		<div class="row-md-1 flex-box">
-   
+            		<div class="row-md-1 flex-box">   
             				<img class="staff-icon" src="/img/cat.jpg">
             				<p>Фетисов Андрей Юрьевич</p>
-            			
-            			
-						
+
             		</div>
             	</div>
             	<div class="col-md-1 active">
@@ -126,8 +120,5 @@
 
 		ТУТ БУДУТ ДИАГРАМКИ
 
-</div>
-</main>
-</body>
-</html>
+<?php require_once  $_SERVER['DOCUMENT_ROOT'] . '/template/footer.php' ?>
 

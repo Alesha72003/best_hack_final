@@ -4,12 +4,8 @@
 
  $idsim = $_SESSION['config-id'];
 // Получение значений из бд
-
-
-
 $supplies = mysqli_query(db\getConnection(), "SELECT * FROM fuel_supplies WHERE idsim = '$idsim' LIMIT 1");
 
-var_dump($supplies);
 
 
 // Установка новых значений 
@@ -23,12 +19,12 @@ var_dump($supplies);
  	foreach (array_keys($_POST) as $value) {
  		 	$query = $query . "`$value`, ";
  	}
- 	$query = substr($query, 0 , strlen($query)-2);
+ 	$query = substr($query ,0 , strlen($query) - 2);
  	$query = $query . ')' . " VALUES( '$idsim', ";
  	foreach ($_POST as $value) {
  		 	$query = $query . "'$value', ";
  	}
- 	$query = substr($query, 0 , strlen($query)-2);
+ 	$query = substr($query ,0 ,strlen($query) - 2);
  	$query = $query . ')';
 
     $res = mysqli_query(db\getConnection(), $query);
@@ -40,8 +36,7 @@ var_dump($supplies);
 <script src="/js/Chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 <link rel="stylesheet" type="text/css" href="/css/Chart.min.css">
-<main>
-<div class="container ">
+
 	<div class="row mt-5">
 		
 	    <ul class="nav nav-tabs card-header-tabs ">
@@ -55,7 +50,9 @@ var_dump($supplies);
 			<div class="col-md-1 ">
 				<ul>
 				<?php foreach ($months as $value) { 
-					//$row = mysqli_fetch_assoc($supplies);
+					$i = 1;
+					$row = mysqli_fetch_assoc($supplies);
+					//var_dump($row);
 					?>
 					
 				<li class="flex-box statistic-element">
@@ -76,8 +73,7 @@ var_dump($supplies);
 	    </div>
     </form>
 	
-</div>
-</main>
+
 <script>
 	var horizontalBarChartData = {
 		labels: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь', 'Июль', "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"],
@@ -134,5 +130,5 @@ var_dump($supplies);
 
 	};
 </script>
-</body>
-</html>
+<?php require_once  $_SERVER['DOCUMENT_ROOT'] . '/template/footer.php' ?>
+

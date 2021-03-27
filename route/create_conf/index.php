@@ -1,23 +1,22 @@
 <?php
  require_once $_SERVER['DOCUMENT_ROOT'] . '/template/header.php';
 
- $id = $_SESSION['id'];
- $query = "SELECT name,surname,patronymic FROM users WHERE id = $id ";
- $result  =  mysqli_query(db\getConnection(), $query);
- $user = mysqli_fetch_assoc($result);
+ $connection  = db\getConnection();
+ $id          = $_SESSION['id'];
+ $query       = "SELECT name,surname,patronymic FROM users WHERE id = $id ";
+ $result      =  mysqli_query($connection, $query);
+ $user        = mysqli_fetch_assoc($result);
 
 
 
  if(isset($_POST['name'])) {
-
-
  	// Делаем запрос к бд
  	$query = "INSERT INTO `simulations` (";
  	foreach (array_keys($_POST) as $value) {
  		 	$query = $query . "`$value`, ";
  	}
- 	$query = substr($query, 0 , strlen($query)-2);
- 	$query = $query . ')' . ' VALUES(';
+ 	$query = substr($query ,0 , strlen($query) - 2);
+ 	$query = $query . ')' . ' VALUES ( ';
  	foreach ($_POST as $value) {
  		 	$query = $query . "'$value', ";
  	}
@@ -25,7 +24,7 @@
  	$query = $query . ')';
 
 
- 	$res = mysqli_query(db\getConnection(), $query);
+ 	$res = mysqli_query($connection, $query);
   header('Location: http://quedafoe.ru/route/menu');
 
  }
@@ -33,9 +32,7 @@
 
 
 ?>
-<main>
 
-<div class="container">
   <div class="mt-4"><a class="text-grey " href="/route/menu/"><i class="fa fa-chevron-left" aria-hidden="true"></i> Профиль</a></div>
 	<div class="row mt-5">
       <div class="col-md-2">
@@ -76,10 +73,7 @@
 
 </form>
 
+<?php require_once  $_SERVER['DOCUMENT_ROOT'] . '/template/footer.php' ?>
 
-</div>
-</main>
-</body>
-</html>
 
 

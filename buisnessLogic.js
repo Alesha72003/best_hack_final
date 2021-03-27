@@ -14,50 +14,47 @@ const connection = mysql.createConnection({
   password: "C5bf39d962406d1cefc15fafc8c6e533%"
 });
 
+//K... - количество; T - время, C - стоимость, N - коэфициенты
+
 class BuisnessLogic {
     constructor(averagePrice, Kazs, Ktank, TbuildPlace, Tdelivery, CcostTank, Cdirect, Cchecker, Csecurity, Cfuiller, Cazs, Cplace, NfuelPerClient, NfuelPerPlace, deltaVstorage, startVstorage, startVlocalstorage) {
-        let maxRazn = -1 / 0;
-        let localmax = 0;
-        let Kmest;
-        let incomesKmest = {}
-        for (Kmest = 1; localmax >= maxRazn; Kmest++) {
-            localmax = -((Kazs - Ktank) * CcostTank);
+        let maxRazn = -1 / 0; //-inf
+        let localmax = 0; // Значение сальдо для конкретного Kmest
+        let Kmest; //Количество мест заправки
+        for (Kmest = 1; localmax >= maxRazn && Kmest < 50; Kmest++) { //Ограничение есть, ибо экстремум можеть юыть ~= 0, когда прибыль падаем - выходим
+            localmax = -((Kazs - Ktank) * CcostTank); //Начальные траты
             console.log(localmax);
-            let Vstorage = 0;
-            let VstorageWithTimeDelivery = {};
-            let Vlocalstorage = 0;
-            for (let i = 0; i < TbuildPlace; i++) {
-                localmax += 0 - Kazs * (Cdirect + Cchecker + Csecurity + Cazs);
-                VstorageWithTimeDelivery[i + Tdelivery] = deltaVstorage[i];
-                if (VstorageWithTimeDelivery[i] != undefined) {
+            let Vstorage = 0; //Глоб. хран
+            let VstorageWithTimeDelivery = {}; //Спрогнозированное наполнение хран. АЗС
+            let Vlocalstorage = 0; //Одинаковое для всех текущ. наполнение АЗС
+            for (let i = 0; i < TbuildPlace; i++) { 
+                localmax += 0 - Kazs * (Cdirect + Cchecker + Csecurity + Cazs); // До месяца когда у нас появляются заправочные места несем убытки (на старте их 0)
+                VstorageWithTimeDelivery[i + Tdelivery] = deltaVstorage[i]; //Прогнозируем наполнение АЗС
+                if (VstorageWithTimeDelivery[i] != undefined) { //Если есть спрогноз. наполн. - добавляем
                     Vlocalstorage += VstorageWithTimeDelivery[i];
                 }
                 console.log({localmax: localmax, Vlocalstorage: Vlocalstorage});
             }
-            let incomes = {}
             for (let i = TbuildPlace; i < 12; i++) {
                 VstorageWithTimeDelivery[i + Tdelivery] = deltaVstorage[i];
                 if (VstorageWithTimeDelivery[i] != undefined) {
                     Vlocalstorage += VstorageWithTimeDelivery[i];
                 }
-                localmax += Math.min(Vlocalstorage / (Kmest * Kazs) / NfuelPerClient, Kmest * NfuelPerPlace) * averagePrice - Kazs * (Cdirect + Cchecker + Csecurity + Cfuiller*Kmest + Cplace * Kmest + Cazs);
-                incomes[i] = Math.min(Vlocalstorage / (Kmest * Kazs) / NfuelPerClient, Kmest * NfuelPerPlace) * averagePrice;
-                Vlocalstorage = 0;
+                localmax += Math.min(Vlocalstorage / (Kmest * Kazs) / NfuelPerClient, Kmest * NfuelPerPlace) * averagePrice - Kazs * (Cdirect + Cchecker + Csecurity + Cfuiller*Kmest + Cplace * Kmest + Cazs); //Либо будет ограничение Топл./запр. место, либо по количеству топлива в запасе
+                Vlocalstorage = 0; //Продали все топливо на станции
                 console.log({localmax: localmax, Vlocalstorage: Vlocalstorage});
             }
             console.log({Kmest: Kmest, localmax: localmax});
             maxRazn = Math.max(maxRazn, localmax);
-            incomesKmest[Kmest] = incomes;
         }
         this.Kmest = Kmest-2;
-        let incomes = incomesKmest[this.Kmest];
         
         let imonth = 0;
         let Vstorage = 0;
         let VstorageWithTimeDelivery = {};
         let Vlocalstorage = 0;
-        
-        function step() {
+        //Параметров очень много, мне лень их сохранять в класс.
+        function step() { // Проходим всё тоже самое, но для месяцев по-отдельности, ибо данные прибытия топлива могли поменяться, да и так честнее на самом деле
             console.log(VstorageWithTimeDelivery, deltaVstorage, Tdelivery, Vlocalstorage);
             switch (true) {
                 case (imonth == 0):
@@ -161,7 +158,7 @@ app.get('/nextstep', (req, res) => {
         return;
     }
     console.log(userData[req.query.simid])
-    userData[req.query.simid].data.push(userData[req.query.simid].step());
+    userData[req.query.simid].data.push(userData[req.query.simid].step()); //Да, да знаю про """"ЭФФФЕКТИВНОЕ"""" использование оперативной памяти
     console.log(userData[req.query.simid].data)
     res.send(userData[req.query.simid].data);
 });
@@ -184,5 +181,5 @@ app.post('/setNewDeltaVstorage', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+    console.log(`Прошу только не падай`)
 })

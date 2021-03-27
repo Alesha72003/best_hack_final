@@ -32,9 +32,7 @@
 
 
 ?>
-<main>
 
-<div class="container">
  
 <div class="mt-4"><a class="text-grey " href="/route/employees_list/"><i class="fa fa-chevron-left" aria-hidden="true"></i> Профиль</a></div>
 
@@ -88,11 +86,4 @@
 
 </form>
 
-
-
-</div>
-</main>
-</body>
-</html>
-
-
+<?php require_once  $_SERVER['DOCUMENT_ROOT'] . '/template/footer.php' ?>

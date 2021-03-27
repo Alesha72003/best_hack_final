@@ -1,3 +1,38 @@
+<?php
+require_once $_SERVER['DOCUMENT_ROOT'] . '/helpers/db.php';
+
+session_start();
+
+if(isset($_SESSION['auth']) && $_SESSION['auth'] == true) {
+   header('Location: http://quedafoe.ru/route/menu');
+}
+
+$connection =  db\getConnection();
+
+if( isset($_POST['login'])) {
+
+   $login = $_POST['login'];
+   $pass = md5($_POST['password']);
+
+   mysqli_real_escape_string($connection, $login);
+   mysqli_real_escape_string($connection, md5($pass));
+
+   $query   = "SELECT id FROM users WHERE login= '$login' AND pass = '$pass' LIMIT 1 ";
+   $result  =  mysqli_query( $connection, $query );
+
+   if ( !$result ) echo "Произошла ошибка: " .  mysqli_error();
+   if($result ->num_rows == 0){
+      // exception 
+   } else {
+      $row = mysqli_fetch_assoc($result);
+      $_SESSION['auth'] = true;
+      $_SESSION['id']   = $row['id'];
+      header('Location: http://quedafoe.ru/route/menu');
+   }
+   
+}
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -12,53 +47,9 @@
       <!-- Bootstrap CSS -->
       <link rel="stylesheet" type="text/css" href="/css/bootstrap.css">
       <!--  Title-->
-      <title>Газпром</title>
+      <title>ЛУКОЙЛ</title>
 </head>
-
 <body>
-
-
-<?php
-
-session_start();
-
-if(isset($_SESSION['auth']) && $_SESSION['auth'] == true)
-{
-	header('Location: http://quedafoe.ru/route/menu');
-}
-
-$connection =  db\getConnection();
-
-
-
-if( isset($_POST['login'])){
-
-
-
-	$login = $_POST['login'];
-	$pass = $_POST['password'];
-
-	mysqli_real_escape_string($connection, $login);
-	mysqli_real_escape_string($connection, $pass);
-
-
-
-	$query   = "SELECT id,login, pass FROM users WHERE login= '$login' AND pass = '$pass' LIMIT 1 ";
-	$result  =  mysqli_query( $connection, $query );
-	if ( !$result ) echo "Произошла ошибка: "  .  mysqli_error();
-
-	if($result ->num_rows == 0){
-		echo "Bad";
-	} else {
-      $row = mysqli_fetch_assoc($result);
-		$_SESSION['auth'] = true;
-      $_SESSION['id']   = $row['id'];
-		header('Location: http://quedafoe.ru/route/menu');
-
-	}
-}
-
-?>
 
 <div id="main-container" class="container-fluid">
    <div class="row">
@@ -86,9 +77,5 @@ if( isset($_POST['login'])){
       </div>
    </div>
 </div>
-
-
-
 </body>
-
 </html>

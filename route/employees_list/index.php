@@ -2,8 +2,7 @@
  require_once $_SERVER['DOCUMENT_ROOT'] . '/template/header.php';
 ?>
 
-<main>
-<div class="container">
+
 
 <div class="row mt-4 flex">
       <div class="col-md-9"><h1 class="main-title">Администрирование<br></h1></div>
@@ -57,8 +56,5 @@
 </table>
 
 
+<?php require_once  $_SERVER['DOCUMENT_ROOT'] . '/template/footer.php' ?>
 
-</div>
-</main>
-</body>
-</html>

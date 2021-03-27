@@ -8,8 +8,6 @@
 
 ?>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<main>
-<div class="container ">
 	<div class="row mt-5">
 		
 	    <ul class="nav nav-tabs card-header-tabs ">
@@ -166,7 +164,5 @@
 </script>
 
 	
-</div>
-</main>
-</body>
-</html>
+<?php require_once  $_SERVER['DOCUMENT_ROOT'] . '/template/footer.php' ?>
+
